@@ -28,8 +28,9 @@ type AzConfig struct {
 }
 
 var (
-	azCli      = "az"
-	GreenColor = "\033[1;32m%s\033[0m\n"
+	azCli       = "az"
+	GreenColor  = "\033[1;32m%s\033[0m"
+	YellowColor = "\033[1;33m%s\033[0m"
 )
 
 func main() {
@@ -41,7 +42,7 @@ func main() {
 		}
 		for _, account := range accounts {
 			if account.IsDefault {
-				fmt.Fprintf(in, GreenColor, account.Name)
+				fmt.Fprintf(in, GreenColor+"\n", account.Name)
 			} else {
 				fmt.Fprintln(in, account.Name)
 			}
@@ -62,7 +63,7 @@ func main() {
 		defaultGroup := getDefaultGroup()
 		for _, group := range groups {
 			if group.Name == defaultGroup {
-				fmt.Fprintf(in, GreenColor, group.Name)
+				fmt.Fprintf(in, GreenColor+"\n", group.Name)
 			} else {
 				fmt.Fprintln(in, group.Name)
 			}
@@ -71,11 +72,11 @@ func main() {
 	})
 	setGroup(selectedGroup)
 
-	conclusion := "Switched to subscription \"" + selectedAccount + "\" "
+	conclusion := "Switched to subscription " + fmt.Sprintf(GreenColor, selectedAccount)
 	if selectedGroup != "" {
-		conclusion += "and resource group \"" + selectedGroup + "\""
+		conclusion += " and resource group " + fmt.Sprintf(GreenColor, selectedGroup)
 	} else {
-		conclusion += "and no resource group"
+		conclusion += " and " + fmt.Sprintf(YellowColor, "no") + " resource group"
 	}
 	fmt.Println(conclusion)
 }
